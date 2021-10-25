@@ -1,0 +1,7 @@
+pip
+requests
+PyYAML
+Jinja2
+setuptools
+fastapi
+uvicorn
