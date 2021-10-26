@@ -1,14 +1,14 @@
 from typing import List
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Path
 from schemas import Book
 
 app = FastAPI()
 
-
-@app.get('/')
-def home():
-    return {"key": "Hello"}
+#
+# @app.get('/')
+# def home():
+#     return {"key": "Hello"}
 
 #
 # @app.get('/{pk}')
@@ -27,7 +27,7 @@ def create_book(item: Book):
 
 
 # задаем параметры для запроса (валидацию)
-#
+# def get_book(q: str = Query(None)):
 # '...' указываем что наш параметр 'q' обязательный
 #
 # 'description' описание параметра 'q' в документции
@@ -44,3 +44,11 @@ def create_book(item: Book):
 @app.get('/book')
 def get_book(q: List[str] = Query(["test1", "test2"], description="Search book", deprecated=True)):
     return q
+
+# Получаем книгу по id
+# Path() добаление дополнительных параметров
+# gt=1, le=20 ограничение значения параметра, т.е. параметр должен быть в пределе 2-20
+# pages дополнительный параметр с ограничение значения параметра
+@app.get('/book/{pk}')
+def get_single_book(pk: int = Path(..., gt=2, le=20), pages: int = Query(None, gt=10, le=500)):
+    return {"pk": pk, "pages": pages}
