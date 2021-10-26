@@ -1,9 +1,10 @@
 from typing import List
 
-from fastapi import FastAPI, Query, Path
-from schemas import Book
+from fastapi import FastAPI, Query, Path, Body
+from schemas import Book, Author
 
 app = FastAPI()
+
 
 #
 # @app.get('/')
@@ -15,15 +16,21 @@ app = FastAPI()
 # def get_item(pk: int, q: str = None):
 #     return {"key": pk, "q": q}
 
+#
+# @app.get('/user/{pk}/items/{item}/')
+# def get_user_item(pk: int, item: str):
+#     return {"user": pk, "item": item}
 
-@app.get('/user/{pk}/items/{item}/')
-def get_user_item(pk: int, item: str):
-    return {"user": pk, "item": item}
-
-
+# quantity: int = Body(...) 'quantity' мы добавили в тело запроса, иначе он был бы запросом
 @app.post('/book')
-def create_book(item: Book):
-    return item
+def create_book(item: Book, author: Author, quantity: int = Body(...)):
+    return {"item": item, 'author': author, 'quantity': quantity}
+
+
+# создаем автора по модели
+@app.post('/author')
+def create_author(author: Author = Body(..., embed=True)):
+    return {'author': author}
 
 
 # задаем параметры для запроса (валидацию)
@@ -44,6 +51,7 @@ def create_book(item: Book):
 @app.get('/book')
 def get_book(q: List[str] = Query(["test1", "test2"], description="Search book", deprecated=True)):
     return q
+
 
 # Получаем книгу по id
 # Path() добаление дополнительных параметров
