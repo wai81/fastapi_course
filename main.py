@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .schemas import Book
+from schemas import Book
 
 app = FastAPI()
 
@@ -19,4 +19,7 @@ def get_user_item(pk: int, item: str):
     return {"user": pk, "item": item}
 
 
+@app.post('/book')
+def create_book(item: Book):
+    return item
 
